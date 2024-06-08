@@ -1,0 +1,57 @@
+"""
+    Blueprints que definen las rutas de API para los productos
+    Definen las rutas de API para gestionar mesas y productos.
+    Utilizan las funciones de servicios para interactuar con la base de datos y procesar la lógica de negocio.
+"""
+from flask import Blueprint, request, jsonify
+from services import create_product, get_all_products, update_product, delete_product
+product_bp = Blueprint('product', __name__)
+
+# Crear un nuevo producto
+@product_bp.route('/products', methods=['POST'])
+def add_product():
+    body = request.json    
+    product_name = body.get('nombre')
+    product_price = body.get('precio')
+    product_description = body.get('descripcion')
+    
+    if not product_name or not product_price:
+        return jsonify({"message": "Missing product name or price"}), 400
+
+    new_product = create_product(product_name, product_price, product_description)
+    return jsonify(new_product), 201
+# Obtener todos los productos
+@product_bp.route('/products', methods=['GET'])
+def get_products():
+    products = get_all_products()
+    if not products:
+        return jsonify({"message": "No products found"}), 404
+    return jsonify(products), 200
+# Actualizar un producto
+@product_bp.route('/products/<int:product_id>', methods=['PUT'])
+def update_product_route(product_id):
+    body = request.json
+    product_name = body.get('nombre')
+    product_price = body.get('precio')
+    product_description = body.get('descripcion')
+    
+    if not product_name or not product_price:
+        return jsonify({"message": "Missing product name or price"}), 400
+
+    updated_product = update_product(product_id, product_name, product_price, product_description)
+    if not updated_product:
+        return jsonify({"message": "Product not found"}), 404
+
+    return jsonify(updated_product), 200
+# Eliminar un producto
+@product_bp.route('/products/<int:product_id>', methods=['DELETE'])
+def delete_product_route(product_id):
+    deleted_product = delete_product(product_id)
+    if not deleted_product:
+        return jsonify({"message": "Product not found"}), 404
+
+    return jsonify({"message": "Product deleted", **deleted_product}), 200
+
+
+
+
