@@ -29,18 +29,18 @@ def register():
 @auth_bp.route('/login', methods=['POST'])
 def login():
     body = request.json
-    username = body.get('username')
+    email = body.get('email')
     password = body.get('password')
-    if not username or not password:
-        return jsonify({"message": "Username and password are required"}), 400
+    if not email or not password:
+        return jsonify({"message": "email and password are required"}), 400
 
-    user, error = authenticate_user(username, password)
+    user, error = authenticate_user(email, password)
     if error:
         return jsonify({"message": error}), 401
 
     # Información adicional a pasar en el token
     additional_claims = {
-        'username': user['username'],
+        'email': user['email'],
         'roles': user.get('role', [])
     }
     access_token = create_access_token(identity=user['id'], additional_claims=additional_claims)

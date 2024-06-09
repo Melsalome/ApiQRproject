@@ -217,11 +217,11 @@ def create_user(restaurant_name, first_name,last_name, email, password,role='use
     db.session.commit()
     return new_user.to_dict(), None
 
-def authenticate_user(username, password):
-    user = User.query.filter_by(username=username).first()
+def authenticate_user(email, password):
+    user = User.query.filter_by(email=email).first()
     if user and user.check_password(password):
         return user.to_dict(), None
-    return None, "Invalid username or password"
+    return None, "Invalid email or password"
 
 #Esta funcion 
 def role_required(role):
