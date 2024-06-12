@@ -5,11 +5,17 @@
     Incluye funciones para crear productos, obtener todos los productos, y generar facturas.
 """
 
+import os
 from flask import jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from app import db
 from models import Mesa, Producto, MesaProducto, Cliente, Factura, DetalleFactura, SesionMesa, User
+from Crypto.Cipher import AES
+import base64
+import json
+from Crypto.Util.Padding import unpad
 
+secreteKey = os.environ.get("SECRET_KEY")
 ##Servicios de mesa
 def create_table(numero_mesa):
     existing_table = Mesa.query.filter_by(numero_mesa=numero_mesa).first()
@@ -237,3 +243,5 @@ def role_required(role):
 
 def get_all_users():
     return [user.to_dict() for user in User.query.all()]
+
+# desencriptar data

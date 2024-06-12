@@ -20,6 +20,7 @@ def add_product():
 
     new_product = create_product(product_name, product_price, product_description)
     return jsonify(new_product), 201
+
 # Obtener todos los productos
 @product_bp.route('/products', methods=['GET'])
 def get_products():
