@@ -41,14 +41,16 @@ def get_products():
 @product_bp.route('/products/<int:product_id>', methods=['PUT'])
 def update_product_route(product_id):
     body = request.json
-    product_name = body.get('nombre')
-    product_price = body.get('precio')
-    product_description = body.get('descripcion')
+    product_name = body.get('name')
+    product_price = body.get('price')
+    product_description = body.get('description')
+    product_image = body.get('image')
+    product_category = body.get('category')
     
     if not product_name or not product_price:
         return jsonify({"message": "Missing product name or price"}), 400
 
-    updated_product = update_product(product_id, product_name, product_price, product_description)
+    updated_product = update_product(product_id,product_name, product_price, product_description, product_image, product_category)
     if not updated_product:
         return jsonify({"message": "Product not found"}), 404
 

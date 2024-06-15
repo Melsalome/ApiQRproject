@@ -130,15 +130,17 @@ def create_product(name, price, description, image, category ):
 def get_all_products():
   return [producto.to_dict() for producto in Producto.query.all()]
 # Actualizar un producto
-def update_product(product_id, nombre, precio, descripcion):
-    producto = Producto.query.get(product_id)
-    if not producto:
+def update_product(product_id, name, price, description, image, category):
+    product = Producto.query.get(product_id)
+    if not product:
         return None
-    producto.nombre = nombre
-    producto.precio = precio
-    producto.descripcion = descripcion
+    product.name = name
+    product.price = price
+    product.description = description
+    product.image = image
+    product.category = category
     db.session.commit()
-    return producto.to_dict()
+    return product.to_dict()
 
 # Obtener producto por id 
 def get_product_by_id(product_id):
