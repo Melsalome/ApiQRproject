@@ -37,15 +37,19 @@ class SesionMesa(db.Model):
         }
 class Producto(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    nombre = db.Column(db.String(80), unique=True, nullable=False)
-    precio = db.Column(db.Float, nullable=False)
-    descripcion = db.Column(db.String(255), nullable=True)
+    name = db.Column(db.String(80), unique=True, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    description = db.Column(db.String(255), nullable=True)
+    image = db.Column(db.String(255), nullable=True)
+    category = db.Column(db.String(255))
     def to_dict(self):
         return {
             'id': self.id,
-            'nombre': self.nombre,
-            'precio': self.precio,
-            'descripcion': self.descripcion
+            'name': self.name,
+            'price': self.price,
+            'description': self.description,
+            'image': self.image,
+            'category' : self.category
         }
 class MesaProducto(db.Model):
     id = db.Column(db.Integer, primary_key=True)

@@ -121,8 +121,8 @@ def update_product_status(sesion_id,new_estado, product_id=None):
 
 ##Servicios de producto
 # Crear un nuevo producto
-def create_product(nombre, precio, descripcion):
-    nuevo_producto = Producto(nombre=nombre, precio=precio, descripcion =descripcion)
+def create_product(name, price, description, image, category ):
+    nuevo_producto = Producto(name=name, price=price, description =description, image=image,category=category)
     db.session.add(nuevo_producto)
     db.session.commit()
     return nuevo_producto.to_dict()
@@ -140,6 +140,12 @@ def update_product(product_id, nombre, precio, descripcion):
     db.session.commit()
     return producto.to_dict()
 
+# Obtener producto por id 
+def get_product_by_id(product_id):
+    producto = Producto.query.get(product_id)
+    if not producto:
+        return None
+    return producto.to_dict()
 # Eliminar un producto
 def delete_product(product_id):
     producto = Producto.query.get(product_id)
