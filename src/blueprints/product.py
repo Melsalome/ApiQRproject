@@ -8,7 +8,7 @@ from services import create_product, get_all_products, update_product, delete_pr
 product_bp = Blueprint('product', __name__)
 
 # Crear un nuevo producto
-@product_bp.route('/products', methods=['POST'])
+@product_bp.route('/products/createproduct', methods=['POST'])
 def add_product():
     body = request.json    
     product_name = body.get('name')
