@@ -5,11 +5,17 @@
     Incluye funciones para crear productos, obtener todos los productos, y generar facturas.
 """
 
+import os
 from flask import jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from app import db
 from models import Mesa, Producto, MesaProducto, Cliente, Factura, DetalleFactura, SesionMesa, User
+from Crypto.Cipher import AES
+import base64
+import json
+from Crypto.Util.Padding import unpad
 
+secreteKey = os.environ.get("SECRET_KEY")
 ##Servicios de mesa
 def create_table(numero_mesa):
     existing_table = Mesa.query.filter_by(numero_mesa=numero_mesa).first()
@@ -115,8 +121,8 @@ def update_product_status(sesion_id,new_estado, product_id=None):
 
 ##Servicios de producto
 # Crear un nuevo producto
-def create_product(nombre, precio, descripcion):
-    nuevo_producto = Producto(nombre=nombre, precio=precio, descripcion =descripcion)
+def create_product(name, price, description, image, category ):
+    nuevo_producto = Producto(name=name, price=price, description =description, image=image,category=category)
     db.session.add(nuevo_producto)
     db.session.commit()
     return nuevo_producto.to_dict()
@@ -124,16 +130,24 @@ def create_product(nombre, precio, descripcion):
 def get_all_products():
   return [producto.to_dict() for producto in Producto.query.all()]
 # Actualizar un producto
-def update_product(product_id, nombre, precio, descripcion):
+def update_product(product_id, name, price, description, image, category):
+    product = Producto.query.get(product_id)
+    if not product:
+        return None
+    product.name = name
+    product.price = price
+    product.description = description
+    product.image = image
+    product.category = category
+    db.session.commit()
+    return product.to_dict()
+
+# Obtener producto por id 
+def get_product_by_id(product_id):
     producto = Producto.query.get(product_id)
     if not producto:
         return None
-    producto.nombre = nombre
-    producto.precio = precio
-    producto.descripcion = descripcion
-    db.session.commit()
     return producto.to_dict()
-
 # Eliminar un producto
 def delete_product(product_id):
     producto = Producto.query.get(product_id)
@@ -217,11 +231,11 @@ def create_user(restaurant_name, first_name,last_name, email, password,role='use
     db.session.commit()
     return new_user.to_dict(), None
 
-def authenticate_user(username, password):
-    user = User.query.filter_by(username=username).first()
+def authenticate_user(email, password):
+    user = User.query.filter_by(email=email).first()
     if user and user.check_password(password):
         return user.to_dict(), None
-    return None, "Invalid username or password"
+    return None, "Invalid email or password"
 
 #Esta funcion 
 def role_required(role):
@@ -237,3 +251,5 @@ def role_required(role):
 
 def get_all_users():
     return [user.to_dict() for user in User.query.all()]
+
+# desencriptar data

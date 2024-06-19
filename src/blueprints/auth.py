@@ -1,6 +1,7 @@
-from flask import Blueprint, request, jsonify
+from flask import Flask, Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
 from services import create_user, authenticate_user,get_all_users
+
 
 auth_bp = Blueprint('auth', __name__)
 
@@ -29,22 +30,23 @@ def register():
 @auth_bp.route('/login', methods=['POST'])
 def login():
     body = request.json
-    username = body.get('username')
+    email = body.get('email')
     password = body.get('password')
-    if not username or not password:
-        return jsonify({"message": "Username and password are required"}), 400
+    if not email or not password:
+        return jsonify({"message": "email and password are required"}), 400
 
-    user, error = authenticate_user(username, password)
+    user, error = authenticate_user(email, password)
     if error:
         return jsonify({"message": error}), 401
 
     # Información adicional a pasar en el token
     additional_claims = {
-        'username': user['username'],
+        'email': user['email'],
         'roles': user.get('role', [])
     }
     access_token = create_access_token(identity=user['id'], additional_claims=additional_claims)
     return jsonify(access_token=access_token), 200
+
 @auth_bp.route('/all', methods=['GET'])
 def get_all():
     return jsonify(get_all_users()), 200
