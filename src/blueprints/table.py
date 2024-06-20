@@ -6,10 +6,10 @@
 """
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt, jwt_required
-from services.tableServices import create_table, get_all_tables, assign_client_to_table, clear_table, role_required
+from services.tableServices import create_table, get_all_tables, assign_client_to_table, clear_table
 from services.sessionServices import create_session
 from services.invoiceServices import generate_invoice
-from services.clientServices import assing
+
 
 table_bp = Blueprint('tables', __name__)
 

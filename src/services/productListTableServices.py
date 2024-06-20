@@ -2,7 +2,7 @@ import os
 from flask import jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from app import db
-from models import Table, Product, ProductTable, Client, Invoice, InvoiceDetail, TableSession, User
+from models import ProductTable
 from Crypto.Cipher import AES
 import base64
 import json
@@ -31,7 +31,7 @@ def get_table_products_list():
     
     
 # Función para obtener los products de una mesa por ID de mesa
-def get_ProductTable_byId(id_session):
+def get_productTable_byId(id_session):
     productTableList = ProductTable.query.filter_by(id_sesion=id_session).all()
     if not productTableList:
         return None

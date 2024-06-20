@@ -5,7 +5,7 @@
     Utilizan las funciones de servicios para interactuar con la base de datos y procesar la lógica de negocio.
 """
 from flask import Blueprint, request, jsonify
-from services.sessionServices import get_active_session, add_product_to_sesion, get_product_list_by_session, close_session, get_active_session_list, update_product_status
+from services.sessionServices import get_active_session, add_product_to_session, get_product_list_by_session, close_session, get_active_session_list, update_product_status
 
 sessions_bp = Blueprint('sessions', __name__)
 
@@ -22,7 +22,7 @@ def add_product_to_table_route(table_id):
     if not session:
         return jsonify({"message": "No active session found for this table"}), 404
 
-    table_product = add_product_to_sesion(session['id_session'], product_id, quantity)
+    table_product = add_product_to_session(session['id_session'], product_id, quantity)
     return jsonify(table_product), 201
 
 

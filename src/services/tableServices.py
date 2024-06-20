@@ -2,7 +2,7 @@
 from flask import jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from app import db
-from models import Table, Producto, MesaProducto, Cliente, Factura, DetalleFactura, SesionMesa, User
+from models import Table, ProductTable
 
 
 # Servicios de Table : 
@@ -55,7 +55,7 @@ def clear_table(table_id):
     table = Table.query.get(table_id)
     if not table:
         return False
-    MesaProducto.query.filter_by(id_sesion=table_id).delete()
+    ProductTable.query.filter_by(id_sesion=table_id).delete()
     table.id_client = None
     db.session.commit()
     return True

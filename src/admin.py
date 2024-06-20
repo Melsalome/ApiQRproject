@@ -2,7 +2,7 @@
 import os
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
-from models import User, Mesa
+from models import User, Table
 from flask_admin.contrib.sqla import ModelView
 from app import db
 

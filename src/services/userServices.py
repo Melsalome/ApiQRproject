@@ -3,7 +3,7 @@ import os
 from flask import jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from app import db
-from models import Table, Producto, MesaProducto, Cliente, Factura, DetalleFactura, SesionMesa, User
+from models import  User
 from Crypto.Cipher import AES
 import base64
 import json

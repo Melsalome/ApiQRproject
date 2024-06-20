@@ -32,7 +32,7 @@ class User(db.Model):
 class Table(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     table_number = db.Column(db.Integer, unique=True, nullable=False)
-    id_client = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=True)
+    id_client = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=True)
     sessions = db.relationship('TableSession', backref='table', lazy=True)
     status = db.Column(db.String(50), nullable=False, default='available')
     
@@ -48,8 +48,8 @@ class Table(db.Model):
     
 class TableSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    id_table = db.Column(db.Integer, db.ForeignKey('mesa.id'), nullable=False)
-    id_client = db.Column(db.Integer, db.ForeignKey('cliente.id'), nullable=False)
+    id_table = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=False)
+    id_client = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
     products = db.relationship('ProductTable', backref='session', lazy=True)
     status = db.Column(db.String(50), nullable=False, default='active')
     
@@ -115,7 +115,7 @@ class Invoice(db.Model):
     summary = db.Column(db.Float, nullable=False)
     payment_method = db.Column(db.String(50), nullable=False)
     date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-    details = db.relationship('InvoiceDetails', backref='invoice', lazy=True)
+    details = db.relationship('InvoiceDetail', backref='invoice', lazy=True)
     def to_dict(self):
         return {
             'id': self.id,
