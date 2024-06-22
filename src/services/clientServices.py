@@ -6,7 +6,7 @@ from app import db
 from models import  Client
 import base64
 import json
-from Crypto.Util.Padding import unpad
+
 
 
 # Servicios de cliente
