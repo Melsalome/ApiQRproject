@@ -22,6 +22,7 @@ pipenv = "*"
 pymysql = "*"
 flask-jwt-extended = "*"
 cryptography = "*"
+crypto = "*"
 
 [requires]
 python_version = "3.12.3"
