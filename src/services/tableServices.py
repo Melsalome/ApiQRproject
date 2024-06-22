@@ -51,11 +51,21 @@ def update_client_in_table(table_id, client_id):
 
 
 # Vaciar Table
-def clear_table(table_id):
+# def clear_table(table_id):
+#     table = Table.query.get(table_id)
+#     if not table:
+#         return False
+#     ProductTable.query.filter_by(id_session=table_id).delete()
+#     table.id_client = None
+#     db.session.commit()
+#     return True
+
+def delete_table(table_id):
     table = Table.query.get(table_id)
     if not table:
-        return False
-    ProductTable.query.filter_by(id_session=table_id).delete()
-    table.id_client = None
+        return None
+    db.session.delete(table)
     db.session.commit()
-    return True
+    return table.to_dict()
+
+

@@ -12,7 +12,7 @@ def add_client():
     body = request.json    
     client_name = body.get('name')
     if not client_name:
-        new_client = create_client(None)
+        new_client = create_client("anonimo")
         return jsonify(new_client), 201
     new_client = create_client(client_name)
     return jsonify(new_client), 201
