@@ -14,7 +14,7 @@ secreteKey = os.environ.get("SECRET_KEY")
 
 ## USUARIOS 
 
-def create_user(restaurant_name, first_name,last_name, email, password,role='user'):
+def create_user(restaurant_name, first_name,last_name, email, password,role):
     if User.query.filter_by(email=email).first():
         return None, "User already exists"
     new_user = User(restaurant_name = restaurant_name, first_name=first_name, last_name=last_name,email=email,role=role)

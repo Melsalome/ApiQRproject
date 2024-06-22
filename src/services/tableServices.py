@@ -55,7 +55,7 @@ def clear_table(table_id):
     table = Table.query.get(table_id)
     if not table:
         return False
-    ProductTable.query.filter_by(id_sesion=table_id).delete()
+    ProductTable.query.filter_by(id_session=table_id).delete()
     table.id_client = None
     db.session.commit()
     return True
