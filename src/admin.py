@@ -2,7 +2,7 @@
 import os
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
-from models import User, Table
+from models import User, Table, Restaurant, Menu, Order, OrderItem
 from flask_admin.contrib.sqla import ModelView
 from app import db
 
@@ -15,6 +15,11 @@ def setup_admin(app):
     
     # Add your models here, for example this is how we add a the User model to the admin
     admin.add_view(ModelView(User, db.session))
+    admin.add_view(ModelView(Restaurant, db.session))
+    admin.add_view(ModelView(Menu, db.session))
+    admin.add_view(ModelView(Table, db.session))
+    admin.add_view(ModelView(Order, db.session))
+    admin.add_view(ModelView(OrderItem, db.session))
     # admin.add_view(ModelView(Mesa, db.session))
 
     # You can duplicate that line to add mew models

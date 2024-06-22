@@ -28,24 +28,40 @@ class User(db.Model):
             'status': "ok"
         }
 
+class Restaurant(db.Model):
+    __tablename__ = 'restaurant'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    image = db.Column(db.String(255), nullable=True)
+    menus = db.relationship('Menu', backref='restaurant', lazy=True)
+
+    def __repr__(self):
+        return f'<Restaurant {self.name}>'
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "image": self.image
+        }
 
 class Table(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'), nullable=False)
     table_number = db.Column(db.Integer, unique=True, nullable=False)
     id_client = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=True)
     sessions = db.relationship('TableSession', backref='table', lazy=True)
     status = db.Column(db.String(50), nullable=False, default='available')
-    
+    restaurant = db.relationship('Restaurant', backref=db.backref('tables', lazy=True))
     def to_dict(self):
         return {
             'id': self.id,
             'table_number': self.table_number,
+            "restaurant_id": self.restaurant_id,
             'id_client': self.id_client,
             'status': self.status,
             'sessions': [sesion.to_dict() for sesion in self.sessions if sesion.status == 'active']
         }
 
-    
 class TableSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_table = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=False)
@@ -145,6 +161,75 @@ class InvoiceDetail(db.Model):
             'unit_price': self.unit_price,
             'subtotal': self.subtotal
         }
-        
-        
+    
+
+class Menu(db.Model):
+    __tablename__ = 'menu'
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=True)
+    price = db.Column(db.Float, nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    image = db.Column(db.String(255), nullable=True)
+    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'), nullable=False)
+
+    def __repr__(self):
+        return f'<Menu {self.name}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "name": self.name,
+            "description": self.description,
+            "price": self.price,
+            "category": self.category,
+            "image": self.image,
+            "restaurant_id": self.restaurant_id
+        }
+
+class Order(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    restaurant_id = db.Column(db.Integer, nullable=False)
+    table_id = db.Column(db.Integer, nullable=False)
+    comment = db.Column(db.String(255), nullable=True)
+    payment_method = db.Column(db.String(50), nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
+    order_items = db.relationship('OrderItem', backref='order', lazy=True)
+    
+    def __repr__(self):
+        return f'<Order {self.id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "restaurant_id": self.restaurant_id,
+            "table_id": self.table_id,
+            "comment": self.comment,
+            "payment_method": self.payment_method,
+            "total_price": self.total_price,
+            "order_items": [item.serialize() for item in self.order_items]
+        }
+
+class OrderItem(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    menu_id = db.Column(db.Integer, nullable=False)
+    name = db.Column(db.String(255), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    price = db.Column(db.Float, nullable=False)
+
+
+    def __repr__(self):
+        return f'<OrderItem {self.id}>'
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "order_id": self.order_id,
+            "menu_id": self.menu_id,
+            "name": self.name,
+            "quantity": self.quantity,
+            "price": self.price,
+          
+        }       
        
