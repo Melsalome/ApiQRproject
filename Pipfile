@@ -24,7 +24,7 @@ flask-jwt-extended = "*"
 cryptography = "*"
 
 [requires]
-python_version = "3.12.3"
+python_version = "3.12.4"
 
 [scripts]
 start="flask run -h 0.0.0.0"
