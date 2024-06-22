@@ -12,7 +12,7 @@ def create_table(table_number):
     if existing_table:
         return None, "Table already exists"
     
-    new_table = Table(table_number=table_number)
+    new_table = Table(table_number=table_number, restaurant_id = 1)
     db.session.add(new_table)
     db.session.commit()
     return new_table.to_dict()
