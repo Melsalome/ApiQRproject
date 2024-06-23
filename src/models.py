@@ -126,44 +126,6 @@ class Client(db.Model):
             'name': self.name
         }
         
-        
-class Invoice(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    id_table = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=False)
-    summary = db.Column(db.Float, nullable=False)
-    payment_method = db.Column(db.String(50), nullable=False)
-    date = db.Column(db.DateTime, nullable=False, default=db.func.current_timestamp())
-    details = db.relationship('InvoiceDetail', backref='invoice', lazy=True)
-    def to_dict(self):
-        return {
-            'id': self.id,
-            'id_table': self.id_table,
-            'summary': self.summary,
-            'payment_method': self.payment_method,
-            'date': self.date,
-            'details': [detail.to_dict() for detail in self.details]
-        }
-        
-        
-class InvoiceDetail(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    id_invoice = db.Column(db.Integer, db.ForeignKey('invoice.id'), nullable=False)
-    id_product = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
-    quantity = db.Column(db.Integer, nullable=False)
-    unit_price = db.Column(db.Float, nullable=False)
-    subtotal = db.Column(db.Float, nullable=False)
-    def to_dict(self):
-        product = Product.query.get(self.id_product)
-        return {
-            'id': self.id,
-            'id_invoice': self.id_invoice,
-            'id_product': self.id_product,
-            'nombre_product': product.nombre if product else None,
-            'quantity': self.quantity,
-            'unit_price': self.unit_price,
-            'subtotal': self.subtotal
-        }
-    
 
 class Menu(db.Model):
     __tablename__ = 'menu'
@@ -197,6 +159,7 @@ class Order(db.Model):
     payment_method = db.Column(db.String(50), nullable=False)
     total_price = db.Column(db.Float, nullable=False)
     order_items = db.relationship('OrderItem', backref='order', lazy=True)
+    invoice = db.relationship('Invoice', back_populates='order', uselist=False)
     
     def __repr__(self):
         return f'<Order {self.id}>'
@@ -234,4 +197,40 @@ class OrderItem(db.Model):
             "price": self.price,
           
         }       
-       
+
+class Invoice(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'), nullable=False)
+    table_id = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=False)
+    order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
+    total_price = db.Column(db.Float, nullable=False)
+    order = db.relationship('Order', back_populates='invoice')
+    def to_dict(self):
+      
+        return {
+            'id': self.id,
+            'table_id': self.table.id,
+            'restaurant_id': self.restaurant.id,
+            'total_price': self.total_price,
+        }
+        
+        
+# class InvoiceDetail(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     id_invoice = db.Column(db.Integer, db.ForeignKey('invoice.id'), nullable=False)
+#     id_product = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+#     quantity = db.Column(db.Integer, nullable=False)
+#     unit_price = db.Column(db.Float, nullable=False)
+#     subtotal = db.Column(db.Float, nullable=False)
+#     def to_dict(self):
+#         product = Product.query.get(self.id_product)
+#         return {
+#             'id': self.id,
+#             'id_invoice': self.id_invoice,
+#             'id_product': self.id_product,
+#             'nombre_product': product.nombre if product else None,
+#             'quantity': self.quantity,
+#             'unit_price': self.unit_price,
+#             'subtotal': self.subtotal
+#         }
+          

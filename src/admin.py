@@ -2,7 +2,7 @@
 import os
 from flask_admin import Admin
 from flask_sqlalchemy import SQLAlchemy
-from models import User, Table, Restaurant, Menu, Order, OrderItem
+from models import User, Table, Restaurant, Menu, Order, OrderItem, Invoice
 from flask_admin.contrib.sqla import ModelView
 from app import db
 
@@ -20,6 +20,7 @@ def setup_admin(app):
     admin.add_view(ModelView(Table, db.session))
     admin.add_view(ModelView(Order, db.session))
     admin.add_view(ModelView(OrderItem, db.session))
+    admin.add_view(ModelView(Invoice, db.session))
     # admin.add_view(ModelView(Mesa, db.session))
 
     # You can duplicate that line to add mew models
