@@ -22,8 +22,8 @@ def get_all_tables():
 
 
 # Asignar cliente a mesa
-def assign_client_to_table(table_id, client_id):
-    table = Table.query.get(table_id)
+def assign_client_to_table(table_number, client_id):
+    table = Table.query.get(table_number)
     if not table:
         return None
     client = client.query.get(client_id)
@@ -33,8 +33,8 @@ def assign_client_to_table(table_id, client_id):
 
 
 # Actualizar estado de la mesa
-def update_table_status(table_id, status):
-    table = Table.query.get(table_id)
+def update_table_status(table_number, status):
+    table = Table.query.filter_by(table_number=table_number).first()
     if table:
         table.status = status
         db.session.commit()
@@ -42,8 +42,8 @@ def update_table_status(table_id, status):
 
 
 # Actualizar cliente de la mesa
-def update_client_in_table(table_id, client_id):
-    table = Table.query.get(table_id)
+def update_client_in_table(table_number, client_id):
+    table = Table.query.filter_by(table_number=table_number).first()
     if table:
         table.id_client = client_id
         db.session.commit()
@@ -60,8 +60,8 @@ def update_client_in_table(table_id, client_id):
 #     db.session.commit()
 #     return True
 
-def delete_table(table_id):
-    table = Table.query.get(table_id)
+def delete_table(table_number):
+    table = Table.query.filter_by(table_number=table_number).first()
     if not table:
         return None
     db.session.delete(table)

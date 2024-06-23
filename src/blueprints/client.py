@@ -6,7 +6,7 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 client_bp = Blueprint('client', __name__)
 
-# Crear un nuevo cliente
+
 @client_bp.route('/client/create', methods=['POST'])
 def add_client():
     body = request.json    
@@ -17,13 +17,13 @@ def add_client():
     new_client = create_client(client_name)
     return jsonify(new_client), 201
 
-# Obtener todos los clientes
+
 @client_bp.route('/clients', methods=['GET'])
 def get_clients():
     clients = get_client_list()
     return jsonify(clients), 200
 
-# Estas rutas hay que cambiarlas para clientes
+
 @client_bp.route('/products/<int:product_id>', methods=['PUT'])
 def update_product_route(product_id):
     body = request.json
