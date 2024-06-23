@@ -66,6 +66,7 @@ class TableSession(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_table = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=False)
     id_client = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=False)
+    table_number =db.Column(db.Integer, nullable=False)
     products = db.relationship('ProductTable', backref='session', lazy=True)
     status = db.Column(db.String(50), nullable=False, default='active')
     
@@ -74,6 +75,7 @@ class TableSession(db.Model):
             'id_session': self.id,
             'id_table': self.id_table,
             'id_client': self.id_client,
+            'table_number': self.table_number,
             'status': self.status,
             'products': [product.to_dict() for product in self.products]
         }
