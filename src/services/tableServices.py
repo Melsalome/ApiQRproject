@@ -12,7 +12,7 @@ def create_table(table_number):
     if existing_table:
         return None, "Table already exists"
     
-    new_table = Table(table_number=table_number)
+    new_table = Table(table_number=table_number, restaurant_id = 1)
     db.session.add(new_table)
     db.session.commit()
     return new_table.to_dict()
@@ -51,11 +51,21 @@ def update_client_in_table(table_id, client_id):
 
 
 # Vaciar Table
-def clear_table(table_id):
+# def clear_table(table_id):
+#     table = Table.query.get(table_id)
+#     if not table:
+#         return False
+#     ProductTable.query.filter_by(id_session=table_id).delete()
+#     table.id_client = None
+#     db.session.commit()
+#     return True
+
+def delete_table(table_id):
     table = Table.query.get(table_id)
     if not table:
-        return False
-    ProductTable.query.filter_by(id_sesion=table_id).delete()
-    table.id_client = None
+        return None
+    db.session.delete(table)
     db.session.commit()
-    return True
+    return table.to_dict()
+
+

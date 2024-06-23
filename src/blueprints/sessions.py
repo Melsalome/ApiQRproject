@@ -1,9 +1,4 @@
-"""
-    Blueprints que definen las rutas de API para las mesas
-    
-    Definen las rutas de API para gestionar mesas y productos.
-    Utilizan las funciones de servicios para interactuar con la base de datos y procesar la lógica de negocio.
-"""
+
 from flask import Blueprint, request, jsonify
 from services.sessionServices import get_active_session, add_product_to_session, get_product_list_by_session, close_session, get_active_session_list, update_product_status
 
@@ -13,17 +8,25 @@ sessions_bp = Blueprint('sessions', __name__)
 @sessions_bp.route('/sessions/<int:table_id>/products', methods=['POST'])
 def add_product_to_table_route(table_id):
     body = request.json
-    product_id = body.get('product_id')
-    quantity = body.get('cantidad', 1)
-    if not product_id:
+    items = body.get('items')
+    
+ 
+    if not items:
         return jsonify({"message": "product_id is required"}), 400
 
     session = get_active_session(table_id)
     if not session:
         return jsonify({"message": "No active session found for this table"}), 404
 
-    table_product = add_product_to_session(session['id_session'], product_id, quantity)
+    for product in items:
+        print(product)
+        if 'menu_id' not in product:
+            return jsonify({"message": "menu_id is required"}), 400
+        print(product['menu_id'])
+            
+        table_product = add_product_to_session(session['id_session'], product['menu_id'], product['quantity'])
     return jsonify(table_product), 201
+    # return jsonify({"message": "Product added to session"}), 201
 
 
 @sessions_bp.route('/sessions/<int:table_id>/active', methods=['GET'])
@@ -49,7 +52,7 @@ def close_session_route(table_id):
     if not session:
         return jsonify({"message": "No active session found for this table"}), 404
     
-    closed_session = close_session(session['id_sesion'])
+    closed_session = close_session(session['id_session'])
     return jsonify(closed_session), 200
 
 @sessions_bp.route('/sessions', methods=['GET'])

@@ -32,14 +32,14 @@ def close_session(sesion_id):
     if sesion:
         sesion.status = 'closed'
         db.session.commit()
-        update_table_status(sesion.table_id, 'available')
-        update_client_in_table(sesion.table_id, None)
+        update_table_status(sesion.id_table, 'available')
+        update_client_in_table(sesion.id_table, None)
     return sesion.to_dict() if sesion else None
 
 
 
 def add_product_to_session(session_id, product_id, quantity):
-    product_table = ProductTable(id_sesion=session_id, id_producto=product_id, quantity=quantity)
+    product_table = ProductTable(id_session=session_id, id_product=product_id, quantity=quantity)
     db.session.add(product_table)
     db.session.commit()
     return product_table.to_dict()
@@ -60,11 +60,10 @@ def update_product_status(session_id,new_status, product_id=None):
         db.session.commit()
         return [product_table.to_dict()]
 
-    product_list_table = ProductTable.query.filter_by(id_sesion=session_id).all()
+    product_list_table = ProductTable.query.filter_by(id_session=session_id).all()
     if not product_list_table:
         return None
     for product_table in product_list_table:
         product_table.status = new_status
     db.session.commit()
     return [product_table.to_dict() for product_table in product_list_table]
-

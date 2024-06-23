@@ -6,10 +6,10 @@
 """
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt, jwt_required
-from services.tableServices import create_table, get_all_tables, assign_client_to_table, clear_table
+from services.tableServices import create_table, get_all_tables, assign_client_to_table
 from services.sessionServices import create_session
 from services.invoiceServices import generate_invoice
-
+from services.tableServices import delete_table
 
 table_bp = Blueprint('tables', __name__)
 
@@ -47,14 +47,14 @@ def assign_client_to_table_route(table_id,client_id):
     return jsonify(session), 200
 
 
-# Limpiar una mesa
-@table_bp.route('/tables/<int:table_id>', methods=['DELETE'])
-def clear_table_route(table_id):
-    success = clear_table(table_id)
-    if not success:
-        return jsonify({"message": "Table not found"}), 404
+# # Limpiar una mesa
+# @table_bp.route('/tables/<int:table_id>', methods=['DELETE'])
+# def clear_table_route(table_id):
+#     success = clear_table(table_id)
+#     if not success:
+#         return jsonify({"message": "Table not found"}), 404
 
-    return jsonify({"message": "Table cleared"}), 200
+#     return jsonify({"message": "Table cleared"}), 200
 
 
 
@@ -71,3 +71,17 @@ def generate_invoice_route(table_id):
         return jsonify({"message": "No approved orders for this table"}), 404
 
     return jsonify(factura), 201
+
+
+# Eliminar mesa 
+@table_bp.route('/tables/<int:table_id>', methods=['DELETE'])
+def delete_table_route(table_id):
+    deleted_table = delete_table(table_id)
+    if not deleted_table:
+        return jsonify({"message": "Table not found"}), 404
+
+    return jsonify({"message": "Table deleted", **deleted_table}), 200
+
+
+
+
