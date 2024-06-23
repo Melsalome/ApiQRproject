@@ -31,7 +31,7 @@ CORS(app)
 
 
 # Importar los modelos para que Alembic pueda detectarlos
-from models import Table, Product, ProductTable, Client, Invoice, InvoiceDetail, TableSession, Restaurant, Order, OrderItem
+from models import Table, Product, ProductTable, Client, Invoice, TableSession, Restaurant, Order, OrderItem
 
 # from blueprints.table import table_bp
 from blueprints.product import product_bp
@@ -47,3 +47,4 @@ app.register_blueprint(productTable_bp, url_prefix='/app')
 app.register_blueprint(sessions_bp, url_prefix='/app')
 app.register_blueprint(auth_bp, url_prefix='/app')
 app.register_blueprint(restaurants_bp, url_prefix='/app')
+
