@@ -201,7 +201,7 @@ class OrderItem(db.Model):
 class Invoice(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'), nullable=False)
-    table_id = db.Column(db.Integer, db.ForeignKey('table.id'), nullable=False)
+    table_number = db.Column(db.Integer,  nullable=False)
     order_id = db.Column(db.Integer, db.ForeignKey('order.id'), nullable=False)
     total_price = db.Column(db.Float, nullable=False)
     order = db.relationship('Order', back_populates='invoice')
@@ -209,28 +209,28 @@ class Invoice(db.Model):
       
         return {
             'id': self.id,
-            'table_id': self.table.id,
+            'table_number': self.table_number,
             'restaurant_id': self.restaurant.id,
             'total_price': self.total_price,
         }
         
         
-# class InvoiceDetail(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     id_invoice = db.Column(db.Integer, db.ForeignKey('invoice.id'), nullable=False)
-#     id_product = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
-#     quantity = db.Column(db.Integer, nullable=False)
-#     unit_price = db.Column(db.Float, nullable=False)
-#     subtotal = db.Column(db.Float, nullable=False)
-#     def to_dict(self):
-#         product = Product.query.get(self.id_product)
-#         return {
-#             'id': self.id,
-#             'id_invoice': self.id_invoice,
-#             'id_product': self.id_product,
-#             'nombre_product': product.nombre if product else None,
-#             'quantity': self.quantity,
-#             'unit_price': self.unit_price,
-#             'subtotal': self.subtotal
-#         }
+class InvoiceDetail(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    id_invoice = db.Column(db.Integer, db.ForeignKey('invoice.id'), nullable=False)
+    id_product = db.Column(db.Integer, db.ForeignKey('product.id'), nullable=False)
+    quantity = db.Column(db.Integer, nullable=False)
+    unit_price = db.Column(db.Float, nullable=False)
+    subtotal = db.Column(db.Float, nullable=False)
+    def to_dict(self):
+        product = Product.query.get(self.id_product)
+        return {
+            'id': self.id,
+            'id_invoice': self.id_invoice,
+            'id_product': self.id_product,
+            'nombre_product': product.nombre if product else None,
+            'quantity': self.quantity,
+            'unit_price': self.unit_price,
+            'subtotal': self.subtotal
+        }
           
