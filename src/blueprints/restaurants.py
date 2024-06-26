@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt, jwt_required, create_access_token
 
-from models import User, db, Restaurant, Table, Menu, Order, OrderItem
+from models import User, db, Restaurant, Table, Menu, Order, OrderItem, Invoice
 
 restaurants_bp = Blueprint('restaurants', __name__)
 
@@ -251,9 +251,8 @@ def create_invoices(restaurant_id, table_id):
     new_invoice = Invoice(
         order_id=order_id,
         restaurant_id=order.restaurant_id,
-        table_id=order.table_id,
+        table_number=order.table_id,
         total_price=total_price,
-        payment_method=order.payment_method,
        
     )
     db.session.add(new_invoice)
@@ -286,7 +285,7 @@ def get_invoice(restaurant_id, table_id, invoice_id):
     response_data = {
         'invoice_id': invoice.id,
         'restaurant_id': invoice.restaurant_id,
-        'table_id': invoice.table_id,
+        'table_number': invoice.table_number,
      
         'total_price': invoice.total_price,
         'order_items': serialized_order_items

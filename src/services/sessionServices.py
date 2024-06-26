@@ -1,13 +1,14 @@
 from flask import jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from app import db
-from models import ProductTable, TableSession
+from models import ProductTable, Table, TableSession
 from services.tableServices import update_table_status, update_client_in_table
 
 
 
 def create_session(number_table, client_id):
-    new_session = TableSession(table_number=number_table, id_client=client_id, status='active')
+    table = Table.query.filter_by(table_number=number_table).first()
+    new_session = TableSession(table_number=number_table, id_table=table.id, id_client=client_id, status='active')
     db.session.add(new_session)
     db.session.commit()
     update_table_status(number_table, 'occupied')
@@ -32,8 +33,8 @@ def close_session(sesion_id):
     if sesion:
         sesion.status = 'closed'
         db.session.commit()
-        update_table_status(sesion.id_table, 'available')
-        update_client_in_table(sesion.id_table, None)
+        update_table_status(sesion.table_number, 'available')
+        update_client_in_table(sesion.table_number, None)
     return sesion.to_dict() if sesion else None
 
 
@@ -45,10 +46,8 @@ def add_product_to_session(session_id, product_id, quantity):
     return product_table.to_dict()
 
 
-
 def get_product_list_by_session(session_id):
     return [product_table.to_dict() for product_table in ProductTable.query.filter_by(id_session=session_id).all()]
-
 
 
 def update_product_status(session_id,new_status, product_id=None):
