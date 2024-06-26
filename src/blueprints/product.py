@@ -4,7 +4,7 @@
     Utilizan las funciones de servicios para interactuar con la base de datos y procesar la lógica de negocio.
 """
 from flask import Blueprint, request, jsonify
-from services import create_product, get_all_products, update_product, delete_product, get_product_by_id
+from services.productServices import create_product, get_all_products, update_product, delete_product, get_product_by_id
 product_bp = Blueprint('product', __name__)
 
 # Crear un nuevo producto

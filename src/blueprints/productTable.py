@@ -4,20 +4,20 @@
     Utilizan las funciones de servicios para interactuar con la base de datos y procesar la lógica de negocio.
 """
 from flask import Blueprint, request, jsonify
-from services import get_all_mesaProductos, get_mesaProducto_byId
-mesaProducto_bp = Blueprint('mesaProducto', __name__)
+from services.productListTableServices import get_table_products_list, get_productTable_byId
+productTable_bp = Blueprint('producttable', __name__)
 
 
 
 # Obtener todos los mesa-productos
-@mesaProducto_bp.route('/mesaProductos', methods=['GET'])
-def get_all_mesaProductos_route():
-    sesiones = get_all_mesaProductos()
+@productTable_bp.route('/producttablelist', methods=['GET'])
+def get_product_table_list_route():
+    sesiones = get_table_products_list()
     return jsonify(sesiones), 200
 
-@mesaProducto_bp.route('/mesaProductos/<int:mesa_id>', methods=['GET'])
-def get_mesaProducto_byId_route(mesa_id):
-    productos = get_mesaProducto_byId(mesa_id)
+@productTable_bp.route('/producttablelist/<int:mesa_id>', methods=['GET'])
+def get_productTable_by_id(mesa_id):
+    productos = get_productTable_byId(mesa_id)
     if not productos:
         return jsonify({"message": "No products found for this table"}), 404
     

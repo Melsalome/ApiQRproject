@@ -5,7 +5,7 @@
     Utilizan las funciones de servicios para interactuar con la base de datos y procesar la lógica de negocio.
 """
 from flask import Blueprint, request, jsonify
-from services import generate_invoice
+from services.userServices import generate_invoice
 
 factura_bp = Blueprint('factura', __name__)
 

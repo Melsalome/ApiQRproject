@@ -13,7 +13,7 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
 from flask_cors import CORS
 from flask_jwt_extended import JWTManager
-from Crypto.Cipher import AES
+
 import base64
 import json
 
@@ -32,17 +32,20 @@ CORS(app)
 
 
 # Importar los modelos para que Alembic pueda detectarlos
-from models import Mesa, Producto, MesaProducto, Cliente, Factura, DetalleFactura, SesionMesa
+from models import Table, Product, ProductTable, Client, Invoice, TableSession, Restaurant, Order, OrderItem
 
 from blueprints.table import table_bp
 from blueprints.product import product_bp
 from blueprints.client import client_bp
-from blueprints.mesaProductos import mesaProducto_bp
-from blueprints.sesions import sesiones_bp
+from blueprints.productTable import productTable_bp
+from blueprints.sessions import sessions_bp
 from blueprints.auth import auth_bp
+from blueprints.restaurants import restaurants_bp
 app.register_blueprint(table_bp, url_prefix='/app')
 app.register_blueprint(product_bp, url_prefix='/app')
 app.register_blueprint(client_bp, url_prefix='/app')
-app.register_blueprint(mesaProducto_bp, url_prefix='/app')
-app.register_blueprint(sesiones_bp, url_prefix='/app')
+app.register_blueprint(productTable_bp, url_prefix='/app')
+app.register_blueprint(sessions_bp, url_prefix='/app')
 app.register_blueprint(auth_bp, url_prefix='/app')
+app.register_blueprint(restaurants_bp, url_prefix='/app')
+
