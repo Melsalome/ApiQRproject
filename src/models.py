@@ -160,6 +160,7 @@ class Order(db.Model):
     total_price = db.Column(db.Float, nullable=False)
     order_items = db.relationship('OrderItem', backref='order', lazy=True)
     invoice = db.relationship('Invoice', back_populates='order', uselist=False)
+    status = db.Column(db.String(50), nullable=False, default='pending')
     
     def __repr__(self):
         return f'<Order {self.id}>'
@@ -172,7 +173,8 @@ class Order(db.Model):
             "comment": self.comment,
             "payment_method": self.payment_method,
             "total_price": self.total_price,
-            "order_items": [item.serialize() for item in self.order_items]
+            "order_items": [item.serialize() for item in self.order_items],
+            "status": self.status
         }
 
 class OrderItem(db.Model):

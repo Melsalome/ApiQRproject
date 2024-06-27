@@ -55,6 +55,7 @@ def update_product_route(product_id):
         return jsonify({"message": "Product not found"}), 404
 
     return jsonify(updated_product), 200
+
 # Eliminar un producto
 @product_bp.route('/products/<int:product_id>', methods=['DELETE'])
 def delete_product_route(product_id):
