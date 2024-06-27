@@ -41,6 +41,7 @@ from blueprints.productTable import productTable_bp
 from blueprints.sessions import sessions_bp
 from blueprints.auth import auth_bp
 from blueprints.restaurants import restaurants_bp
+from blueprints.generateqr import generateqr_bp
 app.register_blueprint(table_bp, url_prefix='/app')
 app.register_blueprint(product_bp, url_prefix='/app')
 app.register_blueprint(client_bp, url_prefix='/app')
@@ -48,4 +49,4 @@ app.register_blueprint(productTable_bp, url_prefix='/app')
 app.register_blueprint(sessions_bp, url_prefix='/app')
 app.register_blueprint(auth_bp, url_prefix='/app')
 app.register_blueprint(restaurants_bp, url_prefix='/app')
-
+app.register_blueprint(generateqr_bp, url_prefix='/app')
