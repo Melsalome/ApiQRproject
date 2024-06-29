@@ -24,10 +24,11 @@ def add_table():
     table_number = body.get('table_number')
     position_x = body.get('position_x')
     position_y = body.get('position_y')
+    icon = body.get('icono')
     if not table_number:
         return jsonify({"message": "table_number is required"}), 400
 
-    new_table = create_table(table_number, position_x, position_y)
+    new_table = create_table(table_number, position_x, position_y, icon)
     return jsonify(new_table), 201
 
 # Obtener todas las mesas
