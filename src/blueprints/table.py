@@ -10,6 +10,8 @@ from services.tableServices import create_table, get_all_tables, assign_client_t
 from services.sessionServices import create_session
 from services.invoiceServices import generate_invoice
 from services.tableServices import delete_table
+from models import Table
+from app import db
 
 table_bp = Blueprint('tables', __name__)
 
@@ -65,14 +67,23 @@ def generate_invoice_route(table_id):
 
 
 # Eliminar mesa 
-@table_bp.route('/tables/<int:table_id>', methods=['DELETE'])
-def delete_table_route(table_id):
-    deleted_table = delete_table(table_id)
+@table_bp.route('/tables/<int:table_number>', methods=['DELETE'])
+def delete_table_route(table_number):
+    deleted_table = delete_table(table_number)
     if not deleted_table:
         return jsonify({"message": "Table not found"}), 404
 
     return jsonify({"message": "Table deleted", **deleted_table}), 200
 
-
-
-
+@table_bp.route('/tables/<int:table_id>', methods=['PUT'])
+def update_table(table_id):
+    data = request.json
+    table = Table.query.get(table_id)
+    if not table:
+        return jsonify({"error": "Table not found"}), 404
+    
+    table.position_x = data.get('position_x', table.position_x)
+    table.position_y = data.get('position_y', table.position_y)
+    db.session.commit()
+    
+    return jsonify(table.to_dict()), 200

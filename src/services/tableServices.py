@@ -2,7 +2,7 @@
 from flask import jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from app import db
-from models import Table, ProductTable
+from models import Table, ProductTable, TableSession
 
 
 # Servicios de Table : 
@@ -64,6 +64,7 @@ def delete_table(table_number):
     table = Table.query.filter_by(table_number=table_number).first()
     if not table:
         return None
+    
     db.session.delete(table)
     db.session.commit()
     return table.to_dict()
