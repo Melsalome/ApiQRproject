@@ -70,3 +70,14 @@ def delete_table(table_number):
     return table.to_dict()
 
 
+def update_table_number(table_id, table_number):
+    table = Table.query.get(table_id)
+    if not table:
+        return None
+    
+    if table:
+        table.table_number = table_number
+        db.session.commit()
+    return table.to_dict() 
+
+    

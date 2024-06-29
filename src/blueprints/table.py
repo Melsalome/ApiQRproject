@@ -9,7 +9,7 @@ from flask_jwt_extended import get_jwt, jwt_required
 from services.tableServices import create_table, get_all_tables, assign_client_to_table
 from services.sessionServices import create_session
 from services.invoiceServices import generate_invoice
-from services.tableServices import delete_table
+from services.tableServices import delete_table, update_table_number
 from models import Table
 from app import db
 
@@ -87,3 +87,18 @@ def update_table(table_id):
     db.session.commit()
     
     return jsonify(table.to_dict()), 200
+
+@table_bp.route('/tables/<int:table_id>/update/number', methods=['PATCH'])
+def update_table_number_route(table_id):
+    body = request.json
+    table_number = body.get('table_number')
+    
+
+    if not table_number:
+        return jsonify({"message": "table_number is required"}), 400
+
+    updated_table_number = update_table_number(table_id, table_number)
+    if not updated_table_number:
+        return jsonify({"message": "not table found"}), 404
+
+    return jsonify(updated_table_number), 200
