@@ -7,12 +7,12 @@ from models import Table, ProductTable
 
 # Servicios de Table : 
 
-def create_table(table_number):
+def create_table(table_number, position_x, position_y):
     existing_table = Table.query.filter_by(table_number=table_number).first()
     if existing_table:
         return None, "Table already exists"
     
-    new_table = Table(table_number=table_number, restaurant_id = 1)
+    new_table = Table(position_x = position_x, position_y = position_y,table_number=table_number, restaurant_id = 1, )
     db.session.add(new_table)
     db.session.commit()
     return new_table.to_dict()

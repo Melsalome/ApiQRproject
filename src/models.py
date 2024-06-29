@@ -51,6 +51,8 @@ class Table(db.Model):
     id_client = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=True)
     sessions = db.relationship('TableSession', backref='table', lazy=True)
     status = db.Column(db.String(50), nullable=False, default='available')
+    position_x = db.Column(db.Integer, nullable=False, default=0)
+    position_y= db.Column(db.Integer, nullable=False, default=0)
     restaurant = db.relationship('Restaurant', backref=db.backref('tables', lazy=True))
     def to_dict(self):
         return {
@@ -59,6 +61,8 @@ class Table(db.Model):
             "restaurant_id": self.restaurant_id,
             'id_client': self.id_client,
             'status': self.status,
+            'position_x': self.position_x,
+            'position_y': self.position_y,
             'sessions': [sesion.to_dict() for sesion in self.sessions if sesion.status == 'active']
         }
 

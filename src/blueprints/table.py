@@ -20,10 +20,12 @@ table_bp = Blueprint('tables', __name__)
 def add_table():
     body = request.json
     table_number = body.get('table_number')
+    position_x = body.get('position_x')
+    position_y = body.get('position_y')
     if not table_number:
         return jsonify({"message": "table_number is required"}), 400
 
-    new_table = create_table(table_number)
+    new_table = create_table(table_number, position_x, position_y)
     return jsonify(new_table), 201
 
 # Obtener todas las mesas
@@ -45,17 +47,6 @@ def assign_client_to_table_route(table_id,client_id):
         return jsonify({"message": "Error creating session"}), 500
 
     return jsonify(session), 200
-
-
-# # Limpiar una mesa
-# @table_bp.route('/tables/<int:table_id>', methods=['DELETE'])
-# def clear_table_route(table_id):
-#     success = clear_table(table_id)
-#     if not success:
-#         return jsonify({"message": "Table not found"}), 404
-
-#     return jsonify({"message": "Table cleared"}), 200
-
 
 
 # Generar una factura
