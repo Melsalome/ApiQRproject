@@ -1,7 +1,7 @@
 from flask import jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from app import db
-from models import  Product
+from models import  Product, ProductTable, TableSession
 
 
 ##Servicios de producto
@@ -40,9 +40,11 @@ def get_product_by_id(product_id):
 
 # Eliminar un producto
 def delete_product(product_id):
+    ProductTable.query.filter_by(id_product=product_id).update({ProductTable.id_product: None})
     product = Product.query.get(product_id)
     if not product:
         return None
+    
     db.session.delete(product)
     db.session.commit()
     return product.to_dict()

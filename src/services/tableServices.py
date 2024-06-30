@@ -65,6 +65,11 @@ def delete_table(table_number):
     if not table:
         return None
     
+    sessions = TableSession.query.filter_by(id_table=table.id).all()
+    for session in sessions:
+        ProductTable.query.filter_by(id_session=session.id).delete()
+        
+    TableSession.query.filter_by(id_table=table.id).delete()
     db.session.delete(table)
     db.session.commit()
     return table.to_dict()

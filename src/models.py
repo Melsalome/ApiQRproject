@@ -49,7 +49,7 @@ class Table(db.Model):
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'), nullable=False)
     table_number = db.Column(db.Integer, unique=True, nullable=False)
     id_client = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=True)
-    sessions = db.relationship('TableSession', backref='table', lazy=True)
+    sessions = db.relationship('TableSession', backref='table', lazy=True, cascade="all, delete-orphan")
     status = db.Column(db.String(50), nullable=False, default='available')
     position_x = db.Column(db.Integer, nullable=False, default=0)
     position_y= db.Column(db.Integer, nullable=False, default=0)
