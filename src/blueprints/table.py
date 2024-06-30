@@ -9,7 +9,9 @@ from flask_jwt_extended import get_jwt, jwt_required
 from services.tableServices import create_table, get_all_tables, assign_client_to_table
 from services.sessionServices import create_session
 from services.invoiceServices import generate_invoice
-from services.tableServices import delete_table
+from services.tableServices import delete_table, update_table_number
+from models import Table
+from app import db
 
 table_bp = Blueprint('tables', __name__)
 
@@ -20,10 +22,13 @@ table_bp = Blueprint('tables', __name__)
 def add_table():
     body = request.json
     table_number = body.get('table_number')
+    position_x = body.get('position_x')
+    position_y = body.get('position_y')
+    icon = body.get('icono')
     if not table_number:
         return jsonify({"message": "table_number is required"}), 400
 
-    new_table = create_table(table_number)
+    new_table = create_table(table_number, position_x, position_y, icon)
     return jsonify(new_table), 201
 
 # Obtener todas las mesas
@@ -47,17 +52,6 @@ def assign_client_to_table_route(table_id,client_id):
     return jsonify(session), 200
 
 
-# # Limpiar una mesa
-# @table_bp.route('/tables/<int:table_id>', methods=['DELETE'])
-# def clear_table_route(table_id):
-#     success = clear_table(table_id)
-#     if not success:
-#         return jsonify({"message": "Table not found"}), 404
-
-#     return jsonify({"message": "Table cleared"}), 200
-
-
-
 # Generar una factura
 @table_bp.route('/tables/<int:table_id>/invoice', methods=['POST'])
 def generate_invoice_route(table_id):
@@ -74,14 +68,38 @@ def generate_invoice_route(table_id):
 
 
 # Eliminar mesa 
-@table_bp.route('/tables/<int:table_id>', methods=['DELETE'])
-def delete_table_route(table_id):
-    deleted_table = delete_table(table_id)
+@table_bp.route('/tables/<int:table_number>', methods=['DELETE'])
+def delete_table_route(table_number):
+    deleted_table = delete_table(table_number)
     if not deleted_table:
         return jsonify({"message": "Table not found"}), 404
 
     return jsonify({"message": "Table deleted", **deleted_table}), 200
 
+@table_bp.route('/tables/<int:table_id>', methods=['PUT'])
+def update_table(table_id):
+    data = request.json
+    table = Table.query.get(table_id)
+    if not table:
+        return jsonify({"error": "Table not found"}), 404
+    
+    table.position_x = data.get('position_x', table.position_x)
+    table.position_y = data.get('position_y', table.position_y)
+    db.session.commit()
+    
+    return jsonify(table.to_dict()), 200
 
+@table_bp.route('/tables/<int:table_id>/update/number', methods=['PATCH'])
+def update_table_number_route(table_id):
+    body = request.json
+    table_number = body.get('table_number')
+    
 
+    if not table_number:
+        return jsonify({"message": "table_number is required"}), 400
 
+    updated_table_number = update_table_number(table_id, table_number)
+    if not updated_table_number:
+        return jsonify({"message": "not table found"}), 404
+
+    return jsonify(updated_table_number), 200

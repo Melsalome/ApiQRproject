@@ -64,7 +64,7 @@ def get_all_sesions_route():
 def update_product_status_route(session_id):
     body = request.json
     new_status = body.get('status')
-    product_id = body.get('id_product')  # Opcional: ID del producto específico
+    product_id = body.get('id_product') 
 
     if not new_status:
         return jsonify({"message": "status is required"}), 400
@@ -74,3 +74,4 @@ def update_product_status_route(session_id):
         return jsonify({"message": "No products found for the given session"}), 404
 
     return jsonify(updated_products), 200
+

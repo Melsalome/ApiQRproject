@@ -2,6 +2,7 @@ from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt, jwt_required, create_access_token
 
 from models import User, db, Restaurant, Table, Menu, Order, OrderItem, Invoice
+from services.orderServices import get_active_order_list
 
 restaurants_bp = Blueprint('restaurants', __name__)
 
@@ -133,7 +134,9 @@ def create_order(restaurant_id, table_id):
     data = request.json
     comment = data.get('comment', '')
     payment_method = data['payment_method']
+    status = data.get('pending')
     items = data['items']
+  
 
     total_price = sum(item['price'] * item['quantity'] for item in items)
 
@@ -142,7 +145,9 @@ def create_order(restaurant_id, table_id):
         table_id=table_id,
         comment=comment,
         payment_method=payment_method,
-        total_price=total_price
+        total_price=total_price,
+        status=status
+        
     )
     db.session.add(order)
     db.session.commit()
@@ -179,6 +184,26 @@ def get_order(restaurant_id, table_id, order_id):
 
     return jsonify(response), 200
 
+@restaurants_bp.route('/<int:restaurant_id>/pending/orders/<int:order_id>', methods=['PATCH'])
+def update_order_status_route(restaurant_id, order_id):
+   
+    
+    if not order_id:
+        return jsonify({"message": "order_id is required"}), 400
+    
+    try:
+        order = Order.query.filter_by(id=order_id, restaurant_id=restaurant_id, status='pending').first()
+        
+        if not order:
+            return jsonify({"message": "Order not found or not in pending status"}), 404
+
+        order.status = 'done'
+        db.session.commit()
+
+        return jsonify(order.serialize()), 200
+    except Exception as error:
+        return jsonify({"error": str(error)}), 500
+    
 @restaurants_bp.route('/restaurants/<int:restaurant_id>/orders', methods=['GET'])
 def get_all_order(restaurant_id):
     orders = Order.query.filter_by(restaurant_id=restaurant_id).all()
@@ -231,6 +256,18 @@ def delete_order(restaurant_id, table_id, order_id):
     db.session.commit()
 
     return '', 204
+
+@restaurants_bp.route('/restaurants/<int:restaurant_id>/orders/pending', methods=['GET'])
+def get_order_pending_route(restaurant_id):
+    try:
+        pending_orders = Order.query.filter_by(restaurant_id=restaurant_id, status='pending').all()
+        return jsonify([order.serialize() for order in pending_orders]), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+
+
+
 
 @restaurants_bp.route('/restaurants/<int:restaurant_id>/tables/<int:table_id>/invoices', methods=['POST'])
 def create_invoices(restaurant_id, table_id):
@@ -316,3 +353,4 @@ def get_all_invoice(restaurant_id,table_id):
         serialized_invoices.append(serialized_invoice)
 
     return jsonify(serialized_invoices), 200
+
