@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt, jwt_required, create_access_token
-from datetime import datetime
+from datetime import datetime, timezone
 from models import User, db, Restaurant, Table, Menu, Order, OrderItem, Invoice
 from services.orderServices import get_active_order_list
 
@@ -146,7 +146,7 @@ def create_order(restaurant_id, table_id):
         comment=comment,
         payment_method=payment_method,
         total_price=total_price,
-        created_at=datetime.utcnow(),
+        created_at=datetime.now(timezone.utc),
         status=status
         
     )
