@@ -25,7 +25,7 @@ cryptography = "*"
 crypto = "*"
 
 [requires]
-python_version = "3.12.4"
+python_version = "3.12"
 
 [scripts]
 start="flask run -h 0.0.0.0"

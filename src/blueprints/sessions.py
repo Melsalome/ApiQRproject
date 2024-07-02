@@ -46,9 +46,9 @@ def get_products_by_session_route(table_id):
     products = get_product_list_by_session(session['id_session'])
     return jsonify(products), 200
 
-@sessions_bp.route('/sessions/<int:table_id>/close', methods=['POST'])
-def close_session_route(table_id):
-    session = get_active_session(table_id)
+@sessions_bp.route('/sessions/<int:table_number>/close', methods=['POST'])
+def close_session_route(table_number):
+    session = get_active_session(table_number)
     if not session:
         return jsonify({"message": "No active session found for this table"}), 404
     

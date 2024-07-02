@@ -1,7 +1,5 @@
-""" 
-    Definicion de modelos de base de datos, las tablas que se van a crear en la base de datos
-"""
 from app import db
+from datetime import datetime, timezone
 from werkzeug.security import generate_password_hash, check_password_hash
 
 
@@ -49,7 +47,7 @@ class Table(db.Model):
     restaurant_id = db.Column(db.Integer, db.ForeignKey('restaurant.id'), nullable=False)
     table_number = db.Column(db.Integer, unique=True, nullable=False)
     id_client = db.Column(db.Integer, db.ForeignKey('client.id'), nullable=True)
-    sessions = db.relationship('TableSession', backref='table', lazy=True)
+    sessions = db.relationship('TableSession', backref='table', lazy=True, cascade="all, delete-orphan")
     status = db.Column(db.String(50), nullable=False, default='available')
     position_x = db.Column(db.Integer, nullable=False, default=0)
     position_y= db.Column(db.Integer, nullable=False, default=0)
@@ -164,6 +162,7 @@ class Order(db.Model):
     comment = db.Column(db.String(255), nullable=True)
     payment_method = db.Column(db.String(50), nullable=False)
     total_price = db.Column(db.Float, nullable=False)
+    created_at = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
     order_items = db.relationship('OrderItem', backref='order', lazy=True)
     invoice = db.relationship('Invoice', back_populates='order', uselist=False)
     status = db.Column(db.String(50), nullable=False, default='pending')
@@ -179,6 +178,7 @@ class Order(db.Model):
             "comment": self.comment,
             "payment_method": self.payment_method,
             "total_price": self.total_price,
+            "created_at": self.created_at.isoformat(),
             "order_items": [item.serialize() for item in self.order_items],
             "status": self.status
         }
