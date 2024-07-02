@@ -1,9 +1,4 @@
-"""
-    Blueprints que definen las rutas de API para las mesas
-    
-    Definen las rutas de API para gestionar mesas y productos.
-    Utilizan las funciones de servicios para interactuar con la base de datos y procesar la lógica de negocio.
-"""
+
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import get_jwt, jwt_required
 from services.tableServices import create_table, get_all_tables, assign_client_to_table
@@ -24,7 +19,7 @@ def add_table():
     table_number = body.get('table_number')
     position_x = body.get('position_x')
     position_y = body.get('position_y')
-    icon = body.get('icono')
+    icon = body.get('icon')
     if not table_number:
         return jsonify({"message": "table_number is required"}), 400
 

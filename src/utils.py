@@ -1,6 +1,3 @@
-"""
-En esta aplicacion se definen algunas funciones auxiliares
-"""
 
 from flask import jsonify, url_for
 
