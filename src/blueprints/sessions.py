@@ -26,7 +26,7 @@ def add_product_to_table_route(table_id):
             
         table_product = add_product_to_session(session['id_session'], product['menu_id'], product['quantity'])
     return jsonify(table_product), 201
-    # return jsonify({"message": "Product added to session"}), 201
+  
 
 
 @sessions_bp.route('/sessions/<int:table_id>/active', methods=['GET'])

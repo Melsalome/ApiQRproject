@@ -6,13 +6,13 @@ from services.tableServices import update_table_status, update_client_in_table
 
 
 
-def create_session(number_table, client_id):
-    table = Table.query.filter_by(table_number=number_table).first()
-    new_session = TableSession(table_number=number_table, id_table=table.id, id_client=client_id, status='active')
+def create_session(table_number, client_id):
+    table = Table.query.filter_by(table_number=table_number).first()
+    new_session = TableSession(table_number=table_number, id_table=table.id, id_client=client_id, status='active')
     db.session.add(new_session)
     db.session.commit()
-    update_table_status(number_table, 'occupied')
-    update_client_in_table(number_table, client_id)
+    update_table_status(table_number, 'occupied')
+    update_client_in_table(table_number, client_id)
     return new_session.to_dict()
 
 
