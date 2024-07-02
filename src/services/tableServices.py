@@ -50,15 +50,6 @@ def update_client_in_table(table_number, client_id):
     return table.to_dict() 
 
 
-# Vaciar Table
-# def clear_table(table_id):
-#     table = Table.query.get(table_id)
-#     if not table:
-#         return False
-#     ProductTable.query.filter_by(id_session=table_id).delete()
-#     table.id_client = None
-#     db.session.commit()
-#     return True
 
 def delete_table(table_number):
     table = Table.query.filter_by(table_number=table_number).first()

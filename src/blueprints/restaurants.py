@@ -170,17 +170,17 @@ def create_order(restaurant_id, table_id):
 
     return jsonify(order.serialize()), 201
 
-@restaurants_bp.route('/restaurants/<int:restaurant_id>/tables/<int:table_id>/orders/<int:order_id>', methods=['GET'])
-def get_order(restaurant_id, table_id, order_id):
-    order = Order.query.filter_by(id=order_id, restaurant_id=restaurant_id, table_id=table_id).first()
+@restaurants_bp.route('/restaurants/<int:restaurant_id>/tables/<int:table_number>/orders/<int:order_id>', methods=['GET'])
+def get_order(restaurant_id, table_number, order_id):
+    order = Order.query.filter_by(id=order_id, restaurant_id=restaurant_id, table_number=table_number).first()
     if order is None:
         return jsonify({"error": "Order not found"}), 404
 
     order_items = OrderItem.query.filter_by(order_id=order_id).all()
-    # items = [item.serialize() for item in order_items]
+    items = [item.serialize() for item in order_items]
 
     response = order.serialize()
-    # response['items'] = items
+    response['items'] = items
 
     return jsonify(response), 200
 
@@ -310,7 +310,7 @@ def create_invoices(restaurant_id, table_id):
 
     return jsonify(response_data), 201
 
-@restaurants_bp.route('/restaurants/<int:restaurant_id>/tables/<int:table_id>/invoices/<int:invoice_id>', methods=['GET'])
+@restaurants_bp.route('/restaurants/<int:restaurant_id>/tables/<int:table_number>/invoices/<int:invoice_id>', methods=['GET'])
 def get_invoice(restaurant_id, table_id, invoice_id):
     invoice = Invoice.query.get(invoice_id)
     if not invoice:
