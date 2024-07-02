@@ -1,6 +1,3 @@
-""" 
-    Definicion de modelos de base de datos, las tablas que se van a crear en la base de datos
-"""
 from app import db
 from werkzeug.security import generate_password_hash, check_password_hash
 

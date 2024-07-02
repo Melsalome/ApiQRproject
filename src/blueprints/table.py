@@ -76,10 +76,10 @@ def delete_table_route(table_number):
 
     return jsonify({"message": "Table deleted", **deleted_table}), 200
 
-@table_bp.route('/tables/<int:table_id>', methods=['PUT'])
-def update_table(table_id):
+@table_bp.route('/tables/<int:number_table>', methods=['PUT'])
+def update_table(number_table):
     data = request.json
-    table = Table.query.get(table_id)
+    table = Table.query.filter_by(table_number=number_table).first()
     if not table:
         return jsonify({"error": "Table not found"}), 404
     
